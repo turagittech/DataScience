@@ -1,0 +1,9 @@
+{"emailconfig": {
+  "emailaddress":"example@gmail.com",
+  "imaphost" : "imap.google.com",
+  "ssl": "y",
+  "emailfolder" : "INBOX",
+  "emailpwd" : "xxxxxxx",
+  "imapport" : "993"
+}
+}
