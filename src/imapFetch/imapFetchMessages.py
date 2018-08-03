@@ -18,6 +18,7 @@ import email.header
 import datetime
 import json
 import getopt
+import argparse
 
 
 EMAIL_ACCOUNT = "xxxx@turagit.com"
@@ -25,7 +26,7 @@ IMAP_HOST = "imap.google.com"
 SSL = "y"
 IMAP_PORT =930
 EMAIL_PASSWORD = ''
-CFG_FILE = 'email_cfg.json'
+
 
 # Use 'INBOX' to read inbox.  Note that whatever folder is specified,
 # after successfully running this script all emails in that folder
@@ -38,36 +39,37 @@ def get_parameters():
     Get Command Line parameter for cfg file location
 
     """
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], ["cfg="])
-    except getopt.GetoptError as err:
-        #print Error Message
-        print(err)
-        sys.exit(2)
-    filename = args
+    parser = argparse.ArgumentParser()
 
-    return
+    parser.add_argument('--cfg', help='Path to email_cfg.json file for imap settings')
+    cfg_file = parser.parse_args()
+    print( 'Config File = ', cfg_file.cfg)
 
 
+    return cfg_file.cfg
 
-def get_config():
+
+
+def get_config(in_cfg_file):
     """
-        Retrive credentials from config file
+        Retrieve credentials from config file
     """
-    with open(CFG_FILE, "r") as cfg_file:
+    emd = dict()
+
+    with open(in_cfg_file, "r") as cfg_file:
         email_cfg = json.load(cfg_file)
         for e in email_cfg['emailconfig']:
-            EMAIL_ACCOUNT = e['emailaddress']
-            EMAIL_FOLDER =  e['emailfolder']
-            IMAP_HOST = e['imaphost']
-            IMAP_PORT = e['imapport']
-            SSL = e['ssl']
-            EMAIL_PASSWORD = e['emailpwd']
+            emd[1] = e['emailaddress']
+            emd['2'] = e['emailfolder']
+            emd['3'] = e['imaphost']
+            emd['4'] = e['imapport']
+            emd['5'] = e['ssl']
+            emd['6'] = e['emailpwd']
             print(EMAIL_ACCOUNT, EMAIL_FOLDER, IMAP_HOST, IMAP_PORT, SSL, EMAIL_PASSWORD )
 
 
 
-    return
+    return emd
 
 
 def process_mailbox(M):
@@ -99,6 +101,12 @@ def process_mailbox(M):
                 email.utils.mktime_tz(date_tuple))
             print ("Local Date:", \
                 local_date.strftime("%a, %d %b %Y %H:%M:%S"))
+
+
+# Main Code here
+CFG_FILE = get_parameters()
+print(CFG_FILE)
+get_config(CFG_FILE)
 
 
 M = imaplib.IMAP4_SSL(IMAP_HOST)
