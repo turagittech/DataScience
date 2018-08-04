@@ -105,7 +105,6 @@ SSL = cfg_items[2]
 EMAIL_FOLDER = cfg_items[3]
 EMAIL_PASSWORD = cfg_items[4]
 IMAP_PORT = cfg_items[5]
-print(EMAIL_ACCOUNT, EMAIL_FOLDER, IMAP_HOST, IMAP_PORT, SSL, EMAIL_PASSWORD)
 
 
 M = imaplib.IMAP4_SSL(IMAP_HOST)
