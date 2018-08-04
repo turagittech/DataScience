@@ -43,8 +43,6 @@ def get_parameters():
 
     parser.add_argument('--cfg', help='Path to email_cfg.json file for imap settings')
     cfg_file = parser.parse_args()
-    print( 'Config File = ', cfg_file.cfg)
-
 
     return cfg_file.cfg
 
@@ -54,22 +52,11 @@ def get_config(in_cfg_file):
     """
         Retrieve credentials from config file
     """
-    emd = dict()
 
     with open(in_cfg_file, "r") as cfg_file:
         email_cfg = json.load(cfg_file)
-        for e in email_cfg['emailconfig']:
-            emd[1] = e['emailaddress']
-            emd['2'] = e['emailfolder']
-            emd['3'] = e['imaphost']
-            emd['4'] = e['imapport']
-            emd['5'] = e['ssl']
-            emd['6'] = e['emailpwd']
-            print(EMAIL_ACCOUNT, EMAIL_FOLDER, IMAP_HOST, IMAP_PORT, SSL, EMAIL_PASSWORD )
 
-
-
-    return emd
+    return email_cfg
 
 
 def process_mailbox(M):
@@ -104,9 +91,21 @@ def process_mailbox(M):
 
 
 # Main Code here
+# Get the command line parameters
 CFG_FILE = get_parameters()
-print(CFG_FILE)
-get_config(CFG_FILE)
+# Read config file
+email_cfg = get_config(CFG_FILE)
+
+# Convert Dictionary from JSON data to List of values required
+cfg_items = list(email_cfg['emailconfig'].values())
+
+EMAIL_ACCOUNT= cfg_items[0]
+IMAP_HOST = cfg_items[1]
+SSL = cfg_items[2]
+EMAIL_FOLDER = cfg_items[3]
+EMAIL_PASSWORD = cfg_items[4]
+IMAP_PORT = cfg_items[5]
+print(EMAIL_ACCOUNT, EMAIL_FOLDER, IMAP_HOST, IMAP_PORT, SSL, EMAIL_PASSWORD)
 
 
 M = imaplib.IMAP4_SSL(IMAP_HOST)
