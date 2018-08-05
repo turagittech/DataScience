@@ -88,16 +88,6 @@ def process_mailbox(M):
                 if part.get_content_type() =='text/plain':
                     f.write(part.get_payload())
 
-
-        print('Message %s: %s' % (num, subject))
-        print('Raw Date:', msg['Date'])
-        # Now convert to local date-time
-        date_tuple = email.utils.parsedate_tz(msg['Date'])
-        if date_tuple:
-            local_date = datetime.datetime.fromtimestamp(
-                email.utils.mktime_tz(date_tuple))
-            print ("Local Date:", \
-                local_date.strftime("%a, %d %b %Y %H:%M:%S"))
     return
 
 
