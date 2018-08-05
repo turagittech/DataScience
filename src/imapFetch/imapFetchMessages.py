@@ -65,7 +65,7 @@ def process_mailbox(M):
     For the sake of this example, print some headers.
     """
 
-    rv, data = M.search(None, "ALL")
+    rv, data = M.search(None, 'SUBJECT', '"NETGEAR R8000 Log"')
     if rv != 'OK':
         print("No messages found!")
         return
@@ -77,8 +77,18 @@ def process_mailbox(M):
             return
 
         msg = email.message_from_bytes(data[0][1])
+        email_date = msg['Date']
+        # 06 Jan 2018 06:23:00
+        dt = datetime.datetime.strptime(email_date, "%d %b %Y %H:%M:%S")
+        outfile = 'router_log.' + datetime.datetime.strftime(dt, "%Y%m%d%H%M%S") + '.log'
         hdr = email.header.make_header(email.header.decode_header(msg['Subject']))
         subject = str(hdr)
+        with open(outfile,'w') as f:
+            for part in msg.walk():
+                if part.get_content_type() =='text/plain':
+                    f.write(part.get_payload())
+
+
         print('Message %s: %s' % (num, subject))
         print('Raw Date:', msg['Date'])
         # Now convert to local date-time
@@ -88,6 +98,7 @@ def process_mailbox(M):
                 email.utils.mktime_tz(date_tuple))
             print ("Local Date:", \
                 local_date.strftime("%a, %d %b %Y %H:%M:%S"))
+    return
 
 
 # Main Code here
